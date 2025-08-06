@@ -1,0 +1,630 @@
+
+#include "serial_rfid_api.h"
+#include "debug_log.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+rfidRespCb_et RfidRespCb(rfidReaderCmdCode_et cmdCode, uint8_t *lineBuff, uint16_t len);
+
+// the current init command is in progress
+rfidCMD_et rfidReaderCmdIndex = SCAN_TAGS;
+
+rfidCmdState_et rfCmdState = RFID_CMD_SEND;
+
+rfidHandlerCmdState_et rfHandlerState = READER_CMD_WAIT;
+
+// retry count to be incremented when cmd failure is received
+uint8_t rfCmdRetryCount = 0;
+
+// tick timer used for waiting during retry interval
+uint32_t rfRetryCmdTick = 0;
+
+rfidConfigStruct_st RfConfigStruct;
+
+//uint8_t epcArrayIndex = 0;
+
+uint8_t epcDuplicateTag = 0;
+
+uint8_t readStatus = 0; 
+
+uint32_t getRfTagStartTick = 0;
+
+uint8_t epcFillCntr = 0;
+
+uint8_t epcList[300];
+uint8_t epcId[15];
+uint8_t tagCount = 0;
+uint8_t lenIndex  =0;
+uint8_t epcLen =0;
+int dupIndex = 0;
+uint8_t prevTagCount =0;
+uint8_t totalTagCnt = 0;
+uint8_t flagMoretag = 0;
+
+uint8_t rfCnt =0;
+
+epcId_st EpcIdStruct[MAX_EPC_IDS_AVAILABLE]; //array of struct to store the EPC id Tags
+
+
+static char hexchars[] = "0123456789ABCDEF";
+
+                                /*Format of RFID Command
+                                 * Len Adr  Cmd  Data[] LSB-CRC16	MSB-CRC16 */
+uint8_t ScanTagsBuff[5]        = {0x04 ,0x00, 0x01, 0xDB, 0x4B};
+uint8_t SetReaderBaudrate[6]   = {0x05 ,0x00, 0x28, 0x05, 0x28, 0xD7};   //0x05 in data means the baudrate is 57600bps
+uint8_t SetReaderAddress[6]    = {0x05 ,0x00, 0x24, 0x00, 0x25, 0x29};   //0x00 in data means readers address to set is 0x00
+uint8_t GetReaderInfoBuff[5]   = {0x04 ,0x00, 0x21, 0xD9, 0x6A};
+uint8_t SetReaderPower[6]      = {0x05 ,0x00, 0x2F, 0x1E, 0x72, 0x34}; //0x1E in Data means Reader pwr - 30 dBm
+uint8_t GetReaderWorkMode[5]   = {0x04 ,0x00, 0x36, 0xE7, 0x0E};
+uint8_t SetReadersWorkMode[11] = {0x0A,0x00, 0x35, 0x00, 0x00, 0x04, 0x02, 0x01 ,0x01,0xC4,0x43};
+uint8_t SetReadersScanTime[6]  = {0x05 ,0x00, 0x25, 0x05,0x50,0x67};  //0x05 in Data means Inventory Scan Time to serach Tags is 500 msec
+ 
+rfidReaderCmd_st rfidReaderCmdList[] = {
+  {ScanTagsBuff,       5, 3,1000,100,0},   //Scan RF tags 
+  {SetReaderAddress,   6, 3,1000,100,0},   //Set Readers Address
+  {SetReaderPower,     6, 3,1000,100,0},   //Set Readers Power command
+  {SetReadersScanTime, 6, 3,1000,100,0},   //Set Readers Scan Time
+  {SetReaderBaudrate,  6, 3,1000,100,0},   //Set Readers baud Rate
+  {GetReaderInfoBuff,  5, 3,1000,100,0},   //Get Readers Information
+  {GetReaderWorkMode,  5, 3,1000,100,0},   //Get Readers Work Mode
+  {SetReadersWorkMode, 11,3,1000,100,0},   //Set Readers Work Mode(Answer Mode)
+};  
+
+unsigned  char rfSendBuff[50];
+
+rfidStateMachine_et  rfidState = RFID_POWER_RESET;
+
+
+/**
+ *  @brief  :RfidInit()- 
+ *  @param  : void
+ *  @return : void         
+ */
+void RfidInit(void)
+{
+  RfidCmdHandlerInit();
+}
+
+void RfidReaderHandler(void)
+{
+  RfidStateMachineHandler();  //this handler handles the statemachines for rfid
+  RfidResponseHandler();      //this handler handles the data received from the rfid
+}
+
+uint8_t RfidGetAvailableTagsCnt(void)
+{
+  epcFillCntr =0;
+  for(uint8_t i = 0; i < MAX_EPC_IDS_AVAILABLE ;i++)
+  {
+       if(EpcIdStruct[i].epcIdLength > 0 )  //if epcLen is > 0 and flag whether the flag is sent on the server is not set
+       {
+          if(!EpcIdStruct[i].epcSentFlag)
+          {
+            epcFillCntr++;
+          }
+       }
+  }
+ return epcFillCntr; 
+}
+
+int RfidSearchDuplicateTag(uint8_t* epcId , uint8_t epcIdLen)
+{
+  int j;
+  for( j =0; j < MAX_EPC_IDS_AVAILABLE; j++) 
+  {
+    if(EpcIdStruct[j].epcIdLength > 0 )  //if the epc id is present at the array index
+    {
+        if(memcmp(EpcIdStruct[j].epcId,epcId,epcIdLen) != 0)  
+        {
+           continue;
+        }
+        /* this tag is a match */
+        break;
+    }
+  }
+  return (j < MAX_EPC_IDS_AVAILABLE) ? j : -1;  
+}
+
+void RfidClearEpcStruct(void)
+{
+//  for(uint8_t i = 0; i < 5 ;i++)
+//  {
+//       memset(EpcIdStruct[i].epcId,0,sizeof(EpcIdStruct[i].epcId));
+//       EpcIdStruct[i].epcIdLength = 0;
+//       EpcIdStruct[i].epcTagArrayIndex = 0;
+//  }
+//  epcArrayIndex = 0;
+}
+
+void RfidEpcDataClearHandler(void)
+{
+   uint8_t rfArrayIndex = 0;
+   //Check any of the epc id is sent on the server clear its epcSentFlag flag and make the timestamp to 0
+   for(rfArrayIndex=0 ; rfArrayIndex < MAX_EPC_IDS_AVAILABLE  ; rfArrayIndex++ )
+   {
+     if(EpcIdStruct[rfArrayIndex].epcIdLength  > 0)
+     {
+         if((EpcIdStruct[rfArrayIndex].epcSentFlag) && \
+           TimeSpent(EpcIdStruct[rfArrayIndex].epcTimeStamp,MAX_EPC_ID_RETAIN_TIME))  //if this epcid is sent on the server then reset the flag and it is retained in the buffer for 60 secs
+         {
+           EpcIdStruct[rfArrayIndex].epcSentFlag = 0;   //clear the epcSentFlag 
+           memset(EpcIdStruct[rfArrayIndex].epcId,0,sizeof(EpcIdStruct[rfArrayIndex].epcId)); //clear the epc id
+           EpcIdStruct[rfArrayIndex].epcIdLength  = 0; //clear the length of the epc id
+           EpcIdStruct[rfArrayIndex].epcTimeStamp = 0; 
+         }
+     }
+   }
+}
+
+uint8_t RfidGetEPCData(uint8_t getDataCntr,RfEpcData_st *RfDataPtr)
+{
+   if(EpcIdStruct[getDataCntr].epcIdLength > 0)  //If the length of the epc id > 0
+   {
+      if(!EpcIdStruct[getDataCntr].epcSentFlag)  //If the flag whether the flag is sent or not is 0
+      {
+        memcpy(RfDataPtr->RfepcId,EpcIdStruct[getDataCntr].epcId,EpcIdStruct[getDataCntr].epcIdLength);
+        RfDataPtr->RfepcIdLen = EpcIdStruct[getDataCntr].epcIdLength;
+        EpcIdStruct[getDataCntr].epcSentFlag = 1;
+        return  1;
+      }
+   }
+   return 0;
+}
+
+
+
+void RfidAddTagToStruct(uint8_t* epcId , uint8_t epcIdLen)
+{
+  char epcStr[30];      
+  uint8_t rfArrayIndex = 0;
+
+   if(epcIdLen <= MAX_EPC_ID_LENGTH_ASCII)
+   {
+       for(rfArrayIndex =0 ; rfArrayIndex < MAX_EPC_IDS_AVAILABLE ; rfArrayIndex++)  //check for empty index where we can insert the epc id in the array of struct
+       {
+           if(EpcIdStruct[rfArrayIndex].epcIdLength == 0) //If epc id length is 0 then the array is clear
+           {
+               memset(EpcIdStruct[rfArrayIndex].epcId,0,sizeof(EpcIdStruct[rfArrayIndex].epcId));
+               memset(epcStr,0,sizeof(epcStr));
+               memcpy(EpcIdStruct[rfArrayIndex].epcId,epcId,epcIdLen);         //get the Epc id of the received Tag
+               EpcIdStruct[rfArrayIndex].epcIdLength      = epcIdLen;          //actual length of the Epc Id
+               EpcIdStruct[rfArrayIndex].epcTagArrayIndex = rfArrayIndex;     //array index at which the tag is stored
+               EpcIdStruct[rfArrayIndex].epcTimeStamp     = GetStartTime();    //timestamp when the tag is received
+               EpcIdStruct[rfArrayIndex].epcSentFlag      = 0;                 //epcId Sent Flag -  This flag is chnaged at api side, when the tag is sent or stored the memory 
+               
+               RfidBytesToHex(EpcIdStruct[rfArrayIndex].epcId,epcIdLen,epcStr); //only to see the tag on debug remove it later
+               LOG_INFO(CH_RFID,"EPC ID : %s , Tag Index : %d",epcStr , EpcIdStruct[rfArrayIndex].epcTagArrayIndex);   //remove
+//               epcArrayIndex++;   //increment the tag stored index
+               
+        //       if(epcArrayIndex >= MAX_EPC_IDS_AVAILABLE)
+        //       {
+        //         epcArrayIndex = 0;    //reset it to 0
+        //       }
+           }
+       }
+   }
+   else   //should never come here
+   {
+    LOG_INFO(CH_RFID,"EPC ID Len More than 15");
+   }
+}
+
+
+
+ uint8_t RfidGetTags(uint8_t* lineBuff,uint16_t len)
+ {   
+   readStatus = 0;
+   lenIndex  =0;
+   
+   readStatus = lineBuff[3]; //status of the read tag command
+   
+   if( (lineBuff[3] == 0x01) ||  (lineBuff[3] == 0x02) ||(lineBuff[3] == 0x03) || (lineBuff[3] == 0x04) )  //status byte in the scan tags command
+   {
+      if(lineBuff[3] == 0x03)
+      {
+          tagCount = lineBuff[4]; //no. of tags received in the string
+          prevTagCount = tagCount;
+          flagMoretag  = 1;
+      }
+      else if(flagMoretag && (lineBuff[3] == 0x01))   //remaining tags are received
+      { 
+         flagMoretag = 0;
+         totalTagCnt = lineBuff[4]; //no. of tags received in the string
+         tagCount = totalTagCnt - prevTagCount;
+      }
+      else
+      {
+        tagCount = lineBuff[4]; //no. of tags received in the string
+      }
+      if (tagCount > 0)
+      {
+         memset(epcList,0,sizeof(epcList));
+         memcpy(epcList,(char*)&lineBuff[5],sizeof(epcList));
+         
+        for(rfCnt=0; rfCnt < tagCount ; rfCnt++)
+        {
+           epcLen = epcList[lenIndex];
+           memset(epcId,0,sizeof(epcId));
+           memcpy(epcId,(char*)&epcList[lenIndex + 1],epcLen);
+           lenIndex = lenIndex + epcLen + 1;   //Get Next Tags Length
+           
+           dupIndex = RfidSearchDuplicateTag(epcId,epcLen); //search for dulpicate tag entry in the struct array
+           if(dupIndex == -1)
+           {
+             LOG_INFO(CH_RFID,"No Duplicate Tag Found");    //No duplicate found
+             RfidAddTagToStruct(epcId,epcLen);              //add the tag in the array struct
+           }
+           else
+           {
+//             LOG_INFO(CH_RFID,"Duplicate Tag Found Skip this Tag"); 
+           }
+        }
+      }
+      return 1;
+   }
+   //any of the error code is received while reading the tag
+   else if ((lineBuff[3] == 0xFB) || (lineBuff[3] == 0xFA) || (lineBuff[3] == 0xF9) || (lineBuff[3] == 0x0b))
+   {
+      return 1;
+   }
+   else if((lineBuff[3] == 0xFE) || (lineBuff[3] == 0xFD) || (lineBuff[3] == 0xFF) || (lineBuff[3] == 0xEE) )
+   {
+     return 0;
+   }
+   else
+   {
+      return 0;
+   }
+ 
+ }
+
+rfidRespCb_et RfidRespCb(rfidReaderCmdCode_et cmdCode, uint8_t *lineBuff, uint16_t len)
+{
+      uint8_t readTagStatus = 0;
+      rfidRespCb_et rfRespRetVal = RFID_RESP_CB_WAIT;
+      switch(cmdCode)
+      {
+      case GET_READER_INFO_CMD:    
+        if(lineBuff[3] == 0x00)  //status bit is success
+        {
+          RfConfigStruct.readersAdd =  lineBuff[1];
+          RfConfigStruct.rfPower    =  lineBuff[10];
+          RfConfigStruct.rfScanTime =  lineBuff[11];
+          rfRespRetVal  = RFID_RESP_CB_OK_COMPLETE;
+          rfCmdState    = RFID_CMD_SUCCESS;
+        }
+        else   //if command response status is not success
+        {
+          rfRespRetVal  = RFID_RESP_CB_ERROR_COMPLETE;
+          rfCmdState    = RFID_CMD_FAILURE;
+        }
+         break;
+       
+      case  SET_READERS_REGION_CMD:   //currently not used
+        break;
+        
+      case SET_READERS_ADDRESS_CMD:
+      case SET_READERS_BAUD_RATE_CMD:
+      case SET_READERS_POWER_CMD:
+      case SET_READERS_SCAN_TIME_CMD:
+      case SET_READERS_WORK_MODE_CMD:
+        if(lineBuff[3] == 0x00)  //status bit is success
+        {
+          rfRespRetVal  = RFID_RESP_CB_OK_COMPLETE;
+          rfCmdState    = RFID_CMD_SUCCESS;
+        }
+        else
+        {
+          rfRespRetVal  = RFID_RESP_CB_ERROR_COMPLETE;
+          rfCmdState    = RFID_CMD_FAILURE;
+        }
+        break;
+                
+      case GET_READERS_WORK_MODE_CMD:
+        if(lineBuff[3] == 0x00 && lineBuff[8] == 0x00)  //status bit is success
+        {
+        rfRespRetVal  = RFID_RESP_CB_OK_COMPLETE;
+          rfCmdState    = RFID_CMD_SUCCESS;
+        }
+        else
+        {
+          rfRespRetVal  = RFID_RESP_CB_ERROR_COMPLETE;
+          rfCmdState    = RFID_CMD_FAILURE;
+        }
+        break;
+        
+      case INVENTORY_TAGS_CMD:
+         readTagStatus =  RfidGetTags(lineBuff,len);
+         if(readTagStatus && (readStatus != 0x03) )
+         { 
+          rfRespRetVal  = RFID_RESP_CB_OK_COMPLETE;
+          rfCmdState    = RFID_CMD_SUCCESS;
+         }
+         else if(readTagStatus && (readStatus == 0x03) )  //If more data is to come
+         {
+           rfRespRetVal = RFID_RESP_CB_WAIT;
+         }
+         else
+         {
+           rfRespRetVal  = RFID_RESP_CB_ERROR_COMPLETE;
+           rfCmdState    = RFID_CMD_FAILURE;
+         }
+        break;
+      
+      case RF_RESP_TIMEOUT:
+        rfRespRetVal  = RFID_RESP_CB_ERROR_COMPLETE;
+        rfCmdState    = RFID_CMD_FAILURE;
+        break;
+      
+      }
+      return rfRespRetVal;
+}
+
+void RfidReaderSetState(rfidStateMachine_et state)
+{    
+    rfidState = state;
+    if(rfidState != RFID_READER_WAIT)
+    {
+       rfHandlerState = READER_CMD_IN_PROGRESS;
+    }
+    switch(rfidState)
+    {
+          case RFID_POWER_RESET:
+          LOG_INFO(CH_RFID,"State - RFID_POWER_RESET");
+          break;
+          
+          case RFID_READER_WAIT:
+          break;
+          
+          case RFID_GET_TAGS:
+//        LOG_DBG(CH_RFID,"State - RFID_GET_TAGS");
+          rfidReaderCmdIndex = SCAN_TAGS;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_SET_READER_ADDRESS:
+          LOG_INFO(CH_RFID,"State - RFID_SET_READER_ADDRESS");
+          rfidReaderCmdIndex = SET_READERS_ADDRESS;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_SET_READER_POWER:
+          LOG_INFO(CH_RFID,"State - RFID_SET_READER_POWER");
+          rfidReaderCmdIndex = SET_READERS_PWR;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_SET_READERS_SCAN_TIME:
+          LOG_INFO(CH_RFID,"State - RFID_SET_READERS_SCAN_TIME");
+          rfidReaderCmdIndex = SET_READERS_SCAN_TIME;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_SET_READER_BAUDRATE:
+          LOG_INFO(CH_RFID,"State - RFID_SET_READER_BAUDRATE");
+          rfidReaderCmdIndex = SET_READERS_BR;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_GET_READER_INFO:
+          LOG_INFO(CH_RFID,"State - RFID_GET_READER_INFO");
+          rfidReaderCmdIndex = GET_READERS_INFO;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_GET_READER_WORKING_MODE:
+          LOG_INFO(CH_RFID,"State - RFID_GET_READER_WORKING_MODE");
+          rfidReaderCmdIndex = GET_READERS_WORK_MODE;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        case RFID_SET_READER_ANSWER_MODE:
+          LOG_INFO(CH_RFID,"State - RFID_SET_READER_ANSWER_MODE");
+          rfidReaderCmdIndex = SET_READERS_WORK_MODE;
+          rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 0;
+          break;
+          
+        default:
+          break;
+    }   
+}
+
+void RfidStateMachineHandler(void)
+{
+    rfidHandlerCmdState_et rfState;
+    switch(rfidState)
+    {
+        case RFID_POWER_RESET:
+           RfidReaderSetState(RFID_GET_READER_INFO);//as no power reset is done now get the readers working mode at the start
+        break;
+        
+       case RFID_READER_WAIT:
+         if(TimeSpent(getRfTagStartTick,SCAN_RF_TAG_TIME)) //SCAN_RF_TAG_TIME - 100 msec
+         {
+            RfidReaderSetState(RFID_GET_TAGS);
+            getRfTagStartTick =  GetStartTime();
+         }
+         break;
+      
+        case RFID_GET_TAGS:
+         rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_READER_WAIT);
+           getRfTagStartTick = GetStartTime();
+         }
+         else if(rfState == READER_CMD_FAIL )
+         {
+           RfidReaderSetState(RFID_GET_READER_WORKING_MODE);
+         }
+        break;
+          
+        case RFID_SET_READER_ADDRESS:    
+           rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_SET_READER_POWER);
+         }
+         else if(rfState == READER_CMD_FAIL)
+         {
+           RfidReaderSetState(RFID_SET_READER_POWER);  //RFID_POWER_RESET
+         }   
+          break;
+          
+        case RFID_SET_READER_POWER:
+          rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_SET_READERS_SCAN_TIME);
+         }
+         else if(rfState == READER_CMD_FAIL)
+         {
+           RfidReaderSetState(RFID_SET_READERS_SCAN_TIME); //RFID_POWER_RESET
+         }   
+        break;
+          
+        case RFID_SET_READER_BAUDRATE:
+            
+          break;
+          
+        case RFID_SET_READERS_SCAN_TIME:
+          rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_SET_READER_ANSWER_MODE);
+         }
+         else if(rfState == READER_CMD_FAIL)
+         {
+           RfidReaderSetState(RFID_SET_READER_ANSWER_MODE);  //RFID_POWER_RESET
+         }   
+        break;
+          
+        case RFID_GET_READER_INFO:
+          rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_GET_READER_WORKING_MODE);
+         }
+         else if(rfState == READER_CMD_FAIL)
+         {
+           RfidReaderSetState(RFID_SET_READER_ADDRESS);
+         } 
+        break;
+        
+        case RFID_GET_READER_WORKING_MODE:
+          rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_GET_TAGS);
+         }
+         else if(rfState == READER_CMD_FAIL)
+         {
+           RfidReaderSetState(RFID_SET_READER_ANSWER_MODE);
+         }
+          break;
+          
+        case RFID_SET_READER_ANSWER_MODE:
+         rfState = RfidCommandHandler();
+         if(rfState == READER_CMD_SUCCESS)
+         {
+           RfidReaderSetState(RFID_GET_TAGS);
+         }
+         else if(rfState == READER_CMD_FAIL)
+         {
+           RfidReaderSetState(RFID_SET_READER_ADDRESS);  //RFID_POWER_RESET
+         }
+        break;
+    }   
+}
+
+
+    
+rfidHandlerCmdState_et RfidCommandHandler(void)
+{
+  switch(rfHandlerState)
+    {
+        case READER_CMD_WAIT:   
+        break;
+        
+        case READER_CMD_IN_PROGRESS:
+            switch(rfCmdState)
+            {
+                case RFID_CMD_SEND:
+                    // check whether is at command is idle
+                    if(RfidIsCmdIdle())
+                    {
+                        if(rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess == 0)
+                        {
+                            // send the at command
+                            SendDataToRfidPort(rfidReaderCmdList[rfidReaderCmdIndex].cmd,rfidReaderCmdList[rfidReaderCmdIndex].cmdLen,
+                                    rfidReaderCmdList[rfidReaderCmdIndex].cmdTimeoutInMs,RfidRespCb);
+                            rfCmdState = RFID_WAIT_REPLY;
+                        }
+                        else
+                        {
+                            rfCmdState = RFID_CMD_SUCCESS;
+                        }
+                    }
+                break;
+                
+                case RFID_WAIT_REPLY:
+                    // the callback function will change the state of the rfHandlerState
+                break;
+                
+                case RFID_CMD_SUCCESS:
+//                    LOG_INFO(CH_RFID,"RFID cmd %d Success",rfidReaderCmdIndex);
+                    rfidReaderCmdList[rfidReaderCmdIndex].flagCmdSuccess = 1;
+                    rfCmdRetryCount = 0;                    
+                    rfHandlerState = READER_CMD_SUCCESS;
+                    rfCmdState = RFID_CMD_SEND;
+                break;
+                
+                case RFID_CMD_FAILURE:
+                    rfCmdRetryCount++;
+                    if(rfCmdRetryCount < rfidReaderCmdList[rfidReaderCmdIndex].numRetries)
+                    {
+                        rfRetryCmdTick = GetStartTime();
+                        rfCmdState = RFID_CMD_RETRY_WAIT; 
+                    }
+                    else
+                    {
+                        // maximum retry is done so set the cmd to failure
+                        rfHandlerState = READER_CMD_FAIL;
+                        rfCmdState = RFID_CMD_SEND;
+                    }
+                break;
+                
+                case RFID_CMD_RETRY_WAIT:
+                    if(TimeSpent(rfRetryCmdTick,rfidReaderCmdList[rfidReaderCmdIndex].retryWaitIntervalInIms))
+                    {
+                        rfCmdState = RFID_CMD_SEND;
+                    }
+                break;
+            }
+        break;
+        
+        case READER_CMD_FAIL:
+            
+        break;
+        
+        case READER_CMD_SUCCESS:
+            
+        break;
+    }
+    return rfHandlerState;
+}
+
+void RfidBytesToHex(const uint8_t *bytes, uint32_t size, char *hex)
+{
+  //while (size--)
+  for(;size!= 0;size--)
+  {
+    *hex++ = hexchars[*bytes >> 4];
+    *hex++ = hexchars[*bytes & 15];
+    bytes++;
+  }
+  *hex = '\0';
+}
+
+
