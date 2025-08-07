@@ -2340,9 +2340,9 @@ void NtripSendSetState(ntripSendHandler_et state)
 void MakeNtripHttpHeader(void)
 {
   ntripcredPtr = GetNtripCred();
-	ntripuser_ccid = getCCID();
-  //encode_basic_auth_credentials(ntripcredPtr->ntripusername, ntripcredPtr->ntrippass, output_b64);
-	encode_basic_auth_credentials(ntripuser_ccid, ntripcredPtr->ntrippass, output_b64);
+	//ntripuser_ccid = getCCID();
+  encode_basic_auth_credentials(ntripcredPtr->ntripusername, ntripcredPtr->ntrippass, output_b64);
+	//encode_basic_auth_credentials(ntripuser_ccid, ntripcredPtr->ntrippass, output_b64);
   memset(ntriphttpHeader, 0, sizeof(ntriphttpHeader));
 	ntriphttpHeaderLen = snprintf((char *)ntriphttpHeader, sizeof(ntriphttpHeader),
 
