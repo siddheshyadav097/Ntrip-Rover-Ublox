@@ -85,9 +85,9 @@ intervals_st*       intervalsPtr = {0};
 thresholds_st*      thresholdsPtr= {0};
 emergencyParams_st* emergencyParamsPtr= {0};
 
-serverConfig_st* server0ConfigPtr= {0};
-serverConfig_st* server1ConfigPtr= {0};
-
+serverConfig_st* server0ConfigPtr = {0};
+serverConfig_st* server1ConfigPtr = {0};
+ntripcredConfig_st* ntripcredPtr = {0};
 gprsConfig_st* gprsConfigSim0Ptr= {0};
 gprsConfig_st* gprsConfigSim1Ptr= {0};
 
@@ -224,6 +224,10 @@ void PrepareDebugSms(void)
 void GetIpPort1Details(void)
 {
  SendSMSLen =  snprintf((char *)sendAckSmsBuff,sizeof(sendAckSmsBuff),"\nIPPORT_1:%s,%d",server0ConfigPtr->serverAddr,server0ConfigPtr->port);
+}
+void GetIpPort2Details(void)
+{
+ SendSMSLen =  snprintf((char *)sendAckSmsBuff,sizeof(sendAckSmsBuff),"\nIPPORT_2:%s,%d",server1ConfigPtr->serverAddr,server1ConfigPtr->port);
 }
 
 void GetTrackInterval(void)
@@ -369,6 +373,11 @@ static uint8_t GsmProcessSmsConfigCmd(uint8_t* cmd_databuff, uint16_t cmd_datale
                   GetIpPort1Details();
                    return 1;
                }
+							 else if((start = (uint8_t*)strstr((const char*) tmp_buff,"GET_IPPORT_2")) != NULL)//**1234GET_IPPORT_1##
+               {
+                  GetIpPort2Details();
+                   return 1;
+               }
                else if((start = (uint8_t*)strstr((const char*) tmp_buff,"GET_SIMDETAILS")) != NULL)//**1234GET_SIMDETAILS##
                {
                //"SIMDETAILS: 8991200010568247133F,Vodafone,www
@@ -461,37 +470,71 @@ static uint8_t GsmProcessSmsConfigCmd(uint8_t* cmd_databuff, uint16_t cmd_datale
 //                    }
 //                    return 0;
 //               }
-               else if((start = (uint8_t*)strstr((const char*) tmp_buff,"SET_IPPORT_1=")) != NULL) //**1234SET_IPPORT_1="hawkeye.qdvts.com",1883,##
-				{
+          else if((start = (uint8_t*)strstr((const char*) tmp_buff,"SET_IPPORT_1=")) != NULL) //**1234SET_IPPORT_1="hawkeye.qdvts.com",1883,##
+				  {
 //                 LOG_INFOS(CH_SMS,"Change IPPORT 1 value");
                    server0ConfigPtr = GetServer0Config();
-                   if((para1 = (uint8_t*)strstr((const char*)tmp_buff, ",")) != NULL)
-					{
-						memset(server0ConfigPtr,0,sizeof(serverConfig_st));      //check       
-						strncpy((char *)server0ConfigPtr->serverAddr,(const char*)start+14,para1-start-15);
+            if((para1 = (uint8_t*)strstr((const char*)tmp_buff, ",")) != NULL)
+					  {
+						  memset(server0ConfigPtr,0,sizeof(serverConfig_st));      //check       
+						  strncpy((char *)server0ConfigPtr->serverAddr,(const char*)start+14,para1-start-15);
 						
-						if((para2 = (uint8_t*)strstr((const char*) para1+1, ",")) != NULL)
-						{	
-							memset(tmp_var,0,sizeof(tmp_var)); 
-							strncpy((char *)tmp_var,(const char*)para1+1, para2-para1-1);
-							server0ConfigPtr->port = atoi((const char*)tmp_var);
-							strcpy((char*)server0ConfigPtr->serverReqType,DEFAULT_SERVER_REQ_TYPE);
-							SetServer0Config(server0ConfigPtr);                 //set new ip and port into the memory
-							server0ConfigPtr = GetServer0Config();
-							memset(host,0,sizeof(host));
-							memset(path,0,sizeof(path));
-							if(sscanf((const char*)server0ConfigPtr->serverAddr, "%99[^/]%99[^\n]",host,path) == 2)
-							{
+						  if((para2 = (uint8_t*)strstr((const char*) para1+1, ",")) != NULL)
+						  {	
+								memset(tmp_var,0,sizeof(tmp_var)); 
+								strncpy((char *)tmp_var,(const char*)para1+1, para2-para1-1);
+								server0ConfigPtr->port = atoi((const char*)tmp_var);
+								strcpy((char*)server0ConfigPtr->serverReqType,DEFAULT_SERVER_REQ_TYPE);
+								SetServer0Config(server0ConfigPtr);                 //set new ip and port into the memory
+								server0ConfigPtr = GetServer0Config();
+								memset(host,0,sizeof(host));
+								memset(path,0,sizeof(path));
+								if(sscanf((const char*)server0ConfigPtr->serverAddr, "%99[^/]%99[^\n]",host,path) == 2)
+							  {
 								//LOG_DBG(CH_SOCK,"Http Host Name and Path Resolved");
-							}
-							GsmUpdateIpPort(aisSock0,host,path,server0ConfigPtr->port,server0ConfigPtr->serverReqType);
+							  }
+							  GsmUpdateIpPort(aisSock0,host,path,server0ConfigPtr->port,server0ConfigPtr->serverReqType);
 //                            LOG_INFO(CH_SMS,"Server 1 IP = %s,Server 1 Port = %d",server0ConfigPtr->serverAddr,server0ConfigPtr->port);
-							GetIpPort1Details();
+							  GetIpPort1Details();
 							return 1;
-						}
-					}
+						  }
+					 }
 
 				}
+				
+				  else if((start = (uint8_t*)strstr((const char*) tmp_buff,"SET_IPPORT_2=")) != NULL) //**1234SET_IPPORT_1="hawkeye.qdvts.com",1883,##
+				  {
+//                 LOG_INFOS(CH_SMS,"Change IPPORT 1 value");
+                   server1ConfigPtr = GetServer1Config();
+            if((para1 = (uint8_t*)strstr((const char*)tmp_buff, ",")) != NULL)
+					  {
+						  memset(server1ConfigPtr,0,sizeof(serverConfig_st));      //check       
+						  strncpy((char *)server1ConfigPtr->serverAddr,(const char*)start+14,para1-start-15);
+						
+						  if((para2 = (uint8_t*)strstr((const char*) para1+1, ",")) != NULL)
+						  {	
+								memset(tmp_var,0,sizeof(tmp_var)); 
+								strncpy((char *)tmp_var,(const char*)para1+1, para2-para1-1);
+								server1ConfigPtr->port = atoi((const char*)tmp_var);
+								strcpy((char*)server1ConfigPtr->serverReqType,DEFAULT_SERVER_REQ_TYPE);
+								SetServer1Config(server1ConfigPtr);                 //set new ip and port into the memory
+								server1ConfigPtr = GetServer1Config();
+								memset(ntriphost,0,sizeof(ntriphost));
+								memset(ntrippath,0,sizeof(ntrippath));
+								if(sscanf((const char*)server1ConfigPtr->serverAddr, "%99[^/]%99[^\n]",ntriphost,ntrippath) == 2)
+							  {
+								//LOG_DBG(CH_SOCK,"Http Host Name and Path Resolved");
+							  }
+							  GsmUpdateIpPort(aisSock1,ntriphost,ntrippath,server1ConfigPtr->port,server1ConfigPtr->serverReqType);
+//                            LOG_INFO(CH_SMS,"Server 1 IP = %s,Server 1 Port = %d",server0ConfigPtr->serverAddr,server0ConfigPtr->port);
+							  GetIpPort2Details();
+							return 1;
+						  }
+					 }
+
+				}
+				
+				
                 //set track interval 
                 else if((start = (uint8_t*)strstr((const char*) tmp_buff,"SET_TRACKINTERVAL=")) != NULL)//**1234SET_TRACKINTERVAL=Normal,Sleep,health,Emergnecy,##
                {  
@@ -2241,15 +2284,15 @@ void NtripSendSetState(ntripSendHandler_et state)
 
 void MakeNtripHttpHeader(void)
 {
-
-  encode_basic_auth_credentials(username, password, output_b64);
+  ntripcredPtr = GetNtripCred();
+  encode_basic_auth_credentials(ntripcredPtr->ntripusername, ntripcredPtr->ntrippass, output_b64);
   memset(ntriphttpHeader, 0, sizeof(ntriphttpHeader));
 	ntriphttpHeaderLen = snprintf((char *)ntriphttpHeader, sizeof(ntriphttpHeader),
 
   "GET /%s HTTP/1.0\r\n"
   "User-Agent: NTRIP Client11/1.0\r\n"
   "Authorization: Basic %s\r\n"
-  "\r\n",mountpoint,output_b64);
+  "\r\n",ntripcredPtr->mountpoint,output_b64);
 
 	
 
@@ -2281,7 +2324,7 @@ void base64_encode(const unsigned char *input, int length, char *output)
 }
 
 
-void encode_basic_auth_credentials(const char *username, const char *password, char *output_b64) 
+void encode_basic_auth_credentials(uint8_t *username, uint8_t *password, char *output_b64) 
 {
     char combined[128];  // Ensure this is large enough for username + ":" + password
 		

@@ -23,6 +23,7 @@
 #define GSM_SIM_SLOT_VALUE_BLOCK_NUMBER                 21
 #define AIS_VENDOR_ID_VEH_REG_BLOCK_NUMBER              24
 #define RFID_POWER_THRESHOLD_BLOCK_NUMBER               27
+#define NTRIP_CRED_BLOCK_NUMBER               30
 
 #define MEM_CLEAR_FLAG                                  0                      //For testing 
    
@@ -78,7 +79,10 @@
 #define READER_ON_TO_OFF_CHECK_TIME       120000  //scan for 120sec to switch OFF the reader
    
 //#endif
-   
+
+#define NTRIP_MOUNT_POINT                  "testmount" 
+#define NTRIP_USERNAME                     "rover1"
+#define NTRIP_PASSWORD                     "adpcmm@850"
    
 #define AIS_UNIT_ID                      "9002"//"7001"// "7000"
 
@@ -143,7 +147,13 @@ typedef  struct
     uint16_t checksum;  	
 }gprsConfig_st;
 
-
+typedef  struct
+{            
+    uint8_t mountpoint[100];     
+    uint8_t ntripusername[100];
+    uint8_t ntrippass[100];
+    uint16_t checksum;  	
+}ntripcredConfig_st;
 
 typedef  struct
 {
@@ -174,6 +184,7 @@ gprsConfig_st* GetGprs0SimConfig(void);
 gprsConfig_st* GetGprs1SimConfig(void);
 aisDataConfig_st* GetAisDeviceData(void);
 rfReaderPwrTh_st* GetRfidPwrThValues(void);
+ntripcredConfig_st* GetNtripCred(void);
 
 //void SetGsmSimSlot0(void);
 //void SetGsmSimSlot1(void);
@@ -190,8 +201,8 @@ void SetRfidPowerThresholds(rfReaderPwrTh_st* data);
 void ReadAllConfigParamsFromFlash();
 //void ReadGsmActiveSimSlot(void);
  void LoadDefaultGprsSim0Config(void);
-
-	
+static void UpdateNtripCredConfigToFlash(void);
+void LoadDefaultNtripCred(void);
 
 
 #endif

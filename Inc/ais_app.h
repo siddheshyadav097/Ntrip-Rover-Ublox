@@ -191,9 +191,9 @@ uint8_t NtripSendIsWaitForPacket(void);
 uint8_t NtripSendIsWaitForPacket(void);
 ntripSendHandler_et GetntripSendState(void);
 void rtcmbuffreset(void);
-void encode_basic_auth_credentials(const char *username, const char *password, char *output_b64);
-void base64_encode(const unsigned char *input, int length, char *output);
-
+//void encode_basic_auth_credentials(const char *username, const char *password, char *output_b64);
+void encode_basic_auth_credentials(uint8_t *username, uint8_t *password, char *output_b64);
+void GetIpPort2Details(void);
 
 #endif
 

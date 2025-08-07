@@ -715,6 +715,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>gsmSocketIndex</ItemText>
         </Ww>
+        <Ww>
+          <count>113</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>GetNtripCred</ItemText>
+        </Ww>
+        <Ww>
+          <count>114</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ntripcredPtr</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

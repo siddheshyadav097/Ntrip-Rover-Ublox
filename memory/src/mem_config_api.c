@@ -19,7 +19,7 @@ static gprsConfig_st gprsConfig_sim1;
 static aisDataConfig_st aisUnitData;
 //static aisDataConfig_st aisNullUnitData = {0};
 static rfReaderPwrTh_st rfPwrThresholds;
-
+static ntripcredConfig_st ntripcred;
 
 
 static void SaveMultipleCopies(uint8_t *data, uint16_t length, uint32_t blockNumberStart);
@@ -35,7 +35,7 @@ static void ReadGprsSim0ConfigFromFlash(void);
 static void ReadGprsSim1ConfigFromFlash(void);											
 static void ReadAisUnitDataFromFlash(void);
 static void ReadRfidPwrThresholdFromFlash(void);
-
+void ReadNtripCredFromFlash(void);
 //static void LoadDefaultGsmSimSlot(void);
 static void LoadDefaultRfidPwrThreshold(void);
 static void LoadDefaultIntervals(void);
@@ -112,6 +112,10 @@ rfReaderPwrTh_st* GetRfidPwrThValues(void)
   return(&rfPwrThresholds);
 }
 
+ntripcredConfig_st* GetNtripCred(void)
+{
+  return(&ntripcred);
+}
 /***************************************************************** SET FUNCTIONS ******************************************************/
 //void SetGsmSimSlot0(void)
 //{
@@ -178,6 +182,12 @@ void SetRfidPowerThresholds(rfReaderPwrTh_st* data)
     UpdateRfidReaderPwrThToFlash();
 }
 
+void SetNtripCred(ntripcredConfig_st* data)
+{
+    memcpy(&ntripcred, data, sizeof(ntripcredConfig_st));
+    UpdateNtripCredConfigToFlash();
+}
+
 /*******************************************************************************************************************************************/
 void ReadAllConfigParamsFromFlash()
 { 
@@ -190,6 +200,7 @@ void ReadAllConfigParamsFromFlash()
         ReadGprsSim1ConfigFromFlash();	
         ReadAisUnitDataFromFlash();
         ReadRfidPwrThresholdFromFlash();
+				ReadNtripCredFromFlash();
 }
 
 void ReadIntervalsFromFlash(void)											
@@ -342,6 +353,37 @@ void ReadRfidPwrThresholdFromFlash(void)
   }
 
 }
+
+void ReadNtripCredFromFlash(void)
+{
+  if(ReadMultipleCopies((uint8_t *)&ntripcred,sizeof(ntripcredConfig_st),NTRIP_CRED_BLOCK_NUMBER))
+  {
+       //do nothing
+			__nop();
+  }
+  else
+  {
+        // check sum invalid so load default values into structure and store it into memory 
+        // this case will happen at first time and memory write failure
+        LOG_DBG(CH_PACKET,"NTRIP CRED RESET");
+        LoadDefaultNtripCred();
+        UpdateNtripCredConfigToFlash();
+  }
+
+}
+void LoadDefaultNtripCred(void)
+{
+
+  memset(ntripcred.mountpoint,0,sizeof(ntripcred.mountpoint));
+	memset(ntripcred.ntripusername,0,sizeof(ntripcred.ntripusername));
+	memset(ntripcred.ntrippass,0,sizeof(ntripcred.ntrippass));
+	
+  strcpy((char *)ntripcred.mountpoint, NTRIP_MOUNT_POINT);
+  strcpy((char *)ntripcred.ntripusername, NTRIP_USERNAME);
+  strcpy((char *)ntripcred.ntrippass, NTRIP_PASSWORD);
+  
+}
+
 void LoadDefaultRfidPwrThreshold(void)
 {
   //thresholds for 12 v
@@ -479,6 +521,12 @@ static void UpdateAisDefaultUnitData(void)
 {
    aisUnitData.checksum =  GetCrc16((uint8_t *)&aisUnitData,sizeof(aisDataConfig_st) - 2);
    SaveMultipleCopies((uint8_t *)&aisUnitData,sizeof(aisDataConfig_st),AIS_VENDOR_ID_VEH_REG_BLOCK_NUMBER);
+}
+
+static void UpdateNtripCredConfigToFlash(void)
+{ 
+    ntripcred.checksum = GetCrc16((uint8_t *)&ntripcred,sizeof(ntripcredConfig_st) - 2);
+    SaveMultipleCopies((uint8_t *)&ntripcred,sizeof(ntripcredConfig_st),NTRIP_CRED_BLOCK_NUMBER);
 }
 
 //saves 3 copies of the structure in 3 consecutive blocks starting from blockNumberStart 
