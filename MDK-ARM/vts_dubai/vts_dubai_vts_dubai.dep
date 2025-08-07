@@ -86,7 +86,7 @@ I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_ufs.h)(0x6304CFEE)
 I (..\gsm\Inc\gsm_ftp_api.h)(0x6304D01A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\ftp_url_decode.h)(0x5AD45A5E)
 I (..\qbootloader\inc\qboot.h)(0x6373828A)
 I (..\qbootloader\inc\qboot_port.h)(0x637392C2)
@@ -1413,7 +1413,7 @@ I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_ufs.h)(0x6304CFEE)
 I (..\gsm\Inc\gsm_ftp_api.h)(0x6304D01A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\ftp_url_decode.h)(0x5AD45A5E)
 I (..\qbootloader\inc\qboot.h)(0x6373828A)
 I (..\qbootloader\inc\qboot_port.h)(0x637392C2)
@@ -1499,7 +1499,7 @@ I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_ufs.h)(0x6304CFEE)
 I (..\gsm\Inc\gsm_ftp_api.h)(0x6304D01A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\ftp_url_decode.h)(0x5AD45A5E)
 I (..\qbootloader\inc\qboot.h)(0x6373828A)
 I (..\qbootloader\inc\qboot_port.h)(0x637392C2)
@@ -1584,7 +1584,7 @@ I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_ufs.h)(0x6304CFEE)
 I (..\gsm\Inc\gsm_ftp_api.h)(0x6304D01A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\ftp_url_decode.h)(0x5AD45A5E)
 I (..\qbootloader\inc\qboot.h)(0x6373828A)
 I (..\qbootloader\inc\qboot_port.h)(0x637392C2)
@@ -1718,7 +1718,7 @@ I (..\Inc\sys_para.h)(0x6891B16D)
 I (..\gsm\Inc\gsm_sms.h)(0x63076844)
 I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 F (..\gsm\Src\gsm_at_handler.c)(0x6837421C)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/gsm_at_handler.o -MD)
 I (..\gsm\Inc\gsm_at_handler.h)(0x6837421C)
 I (..\gsm\Inc\gsm_port.h)(0x6648A1C0)
@@ -1888,7 +1888,7 @@ I (..\gsm\Inc\gsm_process_resp.h)(0x630763B2)
 I (..\gsm\Inc\gsm_common.h)(0x5AC49A7C)
 I (..\gsm\Inc\gsm_urc_api.h)(0x630769DC)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\ftp_url_decode.h)(0x5AD45A5E)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x625283FE)
 F (..\gsm\Src\gsm_gprs_api.c)(0x653A4F12)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/gsm_gprs_api.o -MD)
@@ -1948,7 +1948,7 @@ I (..\Ring_Buffer\Inc\ring_buffer.h)(0x5AF191DC)
 I (..\gsm\Inc\gsm_process_resp.h)(0x630763B2)
 I (..\gsm\Inc\gsm_common.h)(0x5AC49A7C)
 I (..\gsm\Inc\gsm_urc_api.h)(0x630769DC)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 F (..\gsm\Src\gsm_idle_task.c)(0x6888A588)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/gsm_idle_task.o -MD)
 I (..\gsm\Inc\gsm_idle_task.h)(0x6308A67E)
 I (..\gsm\Inc\gsm_port.h)(0x6648A1C0)
@@ -2023,7 +2023,7 @@ I (..\Packeting\Inc\sensor_port.h)(0x5AED4D1C)
 I (..\Inc\sys_para.h)(0x6891B16D)
 I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\gsm_sms.h)(0x63076844)
 F (..\gsm\Src\gsm_init_cmd.c)(0x68441D6A)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/gsm_init_cmd.o -MD)
 I (..\gsm\Inc\gsm_sim_api.h)(0x5AC49A7C)
@@ -2100,7 +2100,7 @@ I (..\Packeting\Inc\sensor_port.h)(0x5AED4D1C)
 I (..\Inc\sys_para.h)(0x6891B16D)
 I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 F (..\gsm\Src\gsm_port.c)(0x6648A116)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/gsm_port.o -MD)
 I (..\gsm\Inc\gsm_port.h)(0x6648A1C0)
 I (..\Drivers\STM32G0xx_HAL_Driver\Inc\stm32g0xx_hal.h)(0x63049BEE)
@@ -2387,7 +2387,7 @@ I (..\Packeting\Inc\sensor_api.h)(0x6304C0D2)
 I (..\Packeting\Inc\sensor_port.h)(0x5AED4D1C)
 I (..\Inc\sys_para.h)(0x6891B16D)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\memory\inc\mem_packet_api.h)(0x5C8B5D14)
 I (..\memory\inc\memorydriver.h)(0x63721604)
 I (..\memory\inc\memoryport.h)(0x63073112)
@@ -2570,7 +2570,7 @@ I (..\gsm\Inc\gsm_process_resp.h)(0x630763B2)
 I (..\gsm\Inc\gsm_common.h)(0x5AC49A7C)
 I (..\gsm\Inc\gsm_urc_api.h)(0x630769DC)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\gsm_ssl_config.h)(0x63076488)
 I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\Packeting\Inc\rtc_port.h)(0x6308762C)
@@ -2662,7 +2662,7 @@ I (..\Packeting\Inc\sensor_port.h)(0x5AED4D1C)
 I (..\Inc\sys_para.h)(0x6891B16D)
 I (..\gsm\Inc\gsm_sms.h)(0x63076844)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 F (..\gsm\Src\gsm_ufs.c)(0x68776569)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/gsm_ufs.o -MD)
 I (..\gsm\Inc\gsm_ufs.h)(0x6304CFEE)
 I (..\gsm\Inc\gsm_port.h)(0x6648A1C0)
@@ -2783,7 +2783,7 @@ I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x625283FE)
 I (C:\Keil_v5\ARM\ARMCLANG\include\math.h)(0x625283FE)
 F (..\memory\src\mem_config_api.c)(0x68934CBA)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/mem_config_api.o -MD)
 I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x625283FE)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x62528400)
 I (..\memory\inc\memorydriver.h)(0x63721604)
 I (..\memory\inc\qmath.h)(0x6304C1F2)
@@ -2837,7 +2837,7 @@ F (..\memory\src\mem_packet_api.c)(0x689356C9)(-xc -std=c99 --target=arm-arm-non
 I (..\memory\inc\mem_packet_api.h)(0x5C8B5D14)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x62528400)
 I (..\memory\inc\memorydriver.h)(0x63721604)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\memory\inc\memoryport.h)(0x63073112)
 I (..\Drivers\STM32G0xx_HAL_Driver\Inc\stm32g0xx_hal.h)(0x63049BEE)
 I (..\Core\Inc\stm32g0xx_hal_conf.h)(0x636E4A98)
@@ -3095,7 +3095,7 @@ I (..\Drivers\STM32G0xx_HAL_Driver\Inc\stm32g0xx_hal_uart.h)(0x630DB6DC)
 I (..\Drivers\STM32G0xx_HAL_Driver\Inc\stm32g0xx_hal_uart_ex.h)(0x63049BEE)
 I (C:\Keil_v5\ARM\ARMCLANG\include\string.h)(0x625283FE)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h)(0x625283FE)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\qtimespent\inc\qtimespent.h)(0x6304B7EA)
 I (..\Inc\led_api.h)(0x687783DB)
 I (..\Inc\led_port.h)(0x653A3D8A)
@@ -3390,7 +3390,7 @@ I (..\Packeting\Inc\rtc_port.h)(0x6308762C)
 I (..\Packeting\Inc\sensor_api.h)(0x6304C0D2)
 I (..\Packeting\Inc\sensor_port.h)(0x5AED4D1C)
 I (..\Inc\sys_para.h)(0x6891B16D)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\memory\inc\mem_packet_api.h)(0x5C8B5D14)
 I (..\memory\inc\memorydriver.h)(0x63721604)
 I (..\Inc\led_api.h)(0x687783DB)
@@ -3720,7 +3720,7 @@ I (..\Drivers\STM32G0xx_HAL_Driver\Inc\stm32g0xx_hal_uart_ex.h)(0x63049BEE)
 F (..\Ring_Buffer\Src\ring_buffer.c)(0x5AF191E4)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/ring_buffer.o -MD)
 I (..\Ring_Buffer\Inc\ring_buffer.h)(0x5AF191DC)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x62528400)
-F (..\Src\ais_app.c)(0x68935186)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/ais_app.o -MD)
+F (..\Src\ais_app.c)(0x6894730C)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m0plus -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -Os -ffunction-sections -Wno-packed -Wno-missing-variable-declarations -Wno-missing-prototypes -Wno-missing-noreturn -Wno-sign-conversion -Wno-nonportable-include-path -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ../Core/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc -I ../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I ../Drivers/CMSIS/Include -I ../debug_log/inc -I ../fota/Inc -I ../gsm/Inc -I ../memory/inc -I ../Packeting/Inc -I ../qbootloader/inc -I ../qtimespent/inc -I ../Ring_Buffer/Inc -I ../Inc -I ../crc16/inc -I ../rfid/inc-I./RTE/_vts_dubai-IC:/Users/Admin/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0/CMSIS/Core/Include-IC:/Users/Admin/AppData/Local/Arm/Packs/Keil/STM32G0xx_DFP/1.4.0/Drivers/CMSIS/Device/ST/STM32G0xx/Include-D__UVISION_VERSION="537" -D_RTE_ -DSTM32G0B1xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32G0B1xx-o ./vts_dubai/ais_app.o -MD)
 I (..\Inc\ais_app.h)(0x68934CF3)
 I (C:\Keil_v5\ARM\ARMCLANG\include\stdint.h)(0x62528400)
 I (..\fota\Inc\fota_api.h)(0x637356A2)
@@ -3799,7 +3799,7 @@ I (..\gsm\Inc\gsm_utility.h)(0x6308C20A)
 I (..\gsm\Inc\gsm_ufs.h)(0x6304CFEE)
 I (..\gsm\Inc\gsm_ftp_api.h)(0x6304D01A)
 I (..\gsm\Inc\gsm_gprs_api.h)(0x653A4F0E)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\gsm\Inc\ftp_url_decode.h)(0x5AD45A5E)
 I (..\qbootloader\inc\qboot.h)(0x6373828A)
 I (..\qbootloader\inc\qboot_port.h)(0x637392C2)
@@ -4145,7 +4145,7 @@ I (..\rfid\inc\rfid_data_handler.h)(0x61F3AB20)
 I (..\Packeting\Inc\digio_port.h)(0x653A2F0C)
 I (..\Packeting\Inc\dig_ip_handler.h)(0x653A0CB0)
 I (..\Ring_Buffer\Inc\ring_buffer.h)(0x5AF191DC)
-I (..\memory\inc\mem_config_api.h)(0x689352E1)
+I (..\memory\inc\mem_config_api.h)(0x68945FF3)
 I (..\Packeting\Inc\bat_api.h)(0x63450508)
 I (..\Packeting\Inc\bat_port.h)(0x6371E4A8)
 I (..\Packeting\Inc\digio_api.h)(0x653A1B40)

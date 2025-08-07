@@ -185,7 +185,7 @@ gprsConfig_st* GetGprs1SimConfig(void);
 aisDataConfig_st* GetAisDeviceData(void);
 rfReaderPwrTh_st* GetRfidPwrThValues(void);
 ntripcredConfig_st* GetNtripCred(void);
-
+void SetNtripCred(ntripcredConfig_st* data);
 //void SetGsmSimSlot0(void);
 //void SetGsmSimSlot1(void);
 //void SetGsmSimSlot(uint8_t val);

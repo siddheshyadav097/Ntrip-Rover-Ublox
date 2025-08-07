@@ -152,7 +152,7 @@ const char *username = "rover3";//"QdNetRover02";
 const char *password = "adpcmm@850";//"Quectel2024";
 char output_b64[128];  
 const char *mountpoint = "testmount";
-
+uint8_t* ntripuser_ccid;
 
 
 
@@ -248,6 +248,11 @@ void GetEmerDetails(void)
 void GetSim1GprsConfig(void)
 {
    SendSMSLen = snprintf((char *)sendAckSmsBuff, sizeof(sendAckSmsBuff),"\nAPNUIDPWD_0:\"%s\",\"%s\",\"%s\"",gprsConfigSim0Ptr->apn,gprsConfigSim0Ptr->username,gprsConfigSim0Ptr->pass);
+}
+
+void GetNtripConfig(void)
+{
+   SendSMSLen = snprintf((char *)sendAckSmsBuff, sizeof(sendAckSmsBuff),"\nNtrip_Details:\"%s\",\"%s\",\"%s\"",ntripcredPtr->mountpoint,ntripcredPtr->ntripusername,ntripcredPtr->ntrippass);
 }
 
 /**
@@ -534,6 +539,14 @@ static uint8_t GsmProcessSmsConfigCmd(uint8_t* cmd_databuff, uint16_t cmd_datale
 
 				}
 				
+				else if((start = (uint8_t*)strstr((const char*) tmp_buff,"GET_NTRIP_DETAILS")) != NULL)//**1234GET_DEBUG##
+               {
+                 GetNtripConfig();
+                 return 1;
+               }
+				
+				
+				
 				
                 //set track interval 
                 else if((start = (uint8_t*)strstr((const char*) tmp_buff,"SET_TRACKINTERVAL=")) != NULL)//**1234SET_TRACKINTERVAL=Normal,Sleep,health,Emergnecy,##
@@ -615,6 +628,48 @@ static uint8_t GsmProcessSmsConfigCmd(uint8_t* cmd_databuff, uint16_t cmd_datale
 						}
 					}
 			   }
+				 
+				 
+				else if((start = (uint8_t*)strstr((const char*) tmp_buff, "SET_NTRIP_DETAILS=")) != NULL)//**1234SET_APNUIDPWD="www","","",##, new updated cmd for 2 diff sim apn uid pwd//**1234SET_APNUIDPWD=0,"www","","",##
+			  { 	
+//                  LOG_INFOS(CH_SMS,"Change APNUIDPWD_0 value");
+                    ntripcredPtr = GetNtripCred();
+                    
+					if((para1 = (uint8_t*)strstr((const char*) tmp_buff, ",")) != NULL)
+					{
+                        memset(ntripcredPtr, 0, sizeof(ntripcredConfig_st));
+						strncpy((char *)ntripcredPtr->mountpoint,(const char*)start+19,para1-start-20);  //12
+                        
+						if((para2 = (uint8_t*)strstr((const char*) para1+1, ",")) != NULL)
+						{
+							strncpy((char *)ntripcredPtr->ntripusername,(const char*)para1+2,para2-para1-3);
+							
+							if((para1 = (uint8_t*)strstr((const char*) para2+1, ",")) != NULL)
+							{
+								strncpy((char *)ntripcredPtr->ntrippass,(const char*)para2+2,para1-para2-3);
+							}
+                            SetNtripCred(ntripcredPtr);               //update this new param in memory
+                            ntripcredPtr = GetNtripCred();  
+														LOG_INFO(CH_SMS,"Mount_point = %s,Ntrip_Username = %s,Ntrip_Password = %s", ntripcredPtr->mountpoint,ntripcredPtr->ntripusername,ntripcredPtr->ntrippass);
+                            GetNtripConfig();
+														
+                            return 1;
+						}
+					}
+			   }
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
+				 
                else if((start = (uint8_t*)strstr((const char*) tmp_buff, "UPGRADE=")) != NULL)//**1234UPGRADE=ftp://hawkeye.qdnet.com/home/gpstrack/fotafile.bin@gpstrack:adpcmm##
 				//**1234UPGRADE=ftp://aq.qdvts.com/fota_220817_0450.bin@packetdump@aq.qdvts.com:pdp@1234##
 				{
@@ -2285,7 +2340,9 @@ void NtripSendSetState(ntripSendHandler_et state)
 void MakeNtripHttpHeader(void)
 {
   ntripcredPtr = GetNtripCred();
-  encode_basic_auth_credentials(ntripcredPtr->ntripusername, ntripcredPtr->ntrippass, output_b64);
+	ntripuser_ccid = getCCID();
+  //encode_basic_auth_credentials(ntripcredPtr->ntripusername, ntripcredPtr->ntrippass, output_b64);
+	encode_basic_auth_credentials(ntripuser_ccid, ntripcredPtr->ntrippass, output_b64);
   memset(ntriphttpHeader, 0, sizeof(ntriphttpHeader));
 	ntriphttpHeaderLen = snprintf((char *)ntriphttpHeader, sizeof(ntriphttpHeader),
 

@@ -725,6 +725,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>ntripcredPtr</ItemText>
         </Ww>
+        <Ww>
+          <count>115</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ntripuser_ccid</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
